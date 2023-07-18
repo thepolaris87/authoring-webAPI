@@ -31,7 +31,6 @@ type TDataMap = { textbox: '__textbox'; image: '__image' };
 // Event Emitter
 // basic
 type TBasic = 'element:select' | 'element:add' | 'element:remove' | 'element:group' | 'element:ungroup';
-
 // focus
 type TFocus = 'element:active' | 'element:discardActive';
 // interaction

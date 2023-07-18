@@ -8,13 +8,12 @@ export default class Interaction {
     // readonly scaleReg = /scale\((-?\d.+?), (-?\d.+?)\)/g;
     // readonly valueReg = /(-?\d.+?)px/g;
     readonly border = ['bc', 'br', 'rc'];
-    area = { width: 800, height: 500 };
+    area;
     children: { element: HTMLElement; offset: { width: number; height: number } }[] = [];
 
     constructor() {
         const canvas = document.querySelector<HTMLElement>('.dm-canvas');
-        this.area.width = canvas?.offsetWidth ?? 0;
-        this.area.height = canvas?.offsetHeight ?? 0;
+        this.area = { width: canvas?.offsetWidth ?? 800, height: canvas?.offsetHeight ?? 500 };
     }
 
     addSize(element: BasicElement) {

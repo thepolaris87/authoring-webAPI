@@ -37,9 +37,7 @@ export default class Editor {
     // ELEMET HANDLER
     add(elements: TDMElements | TDMElements[]) {
         const _elements = Array.isArray(elements) ? elements : [elements];
-        _elements.forEach((element) => {
-            this.canvas.appendChild(element);
-        });
+        _elements.forEach((element) => this.canvas.appendChild(element));
         EE.emit('element:add');
         SO.notify();
     }
@@ -114,12 +112,12 @@ export default class Editor {
     on(event: TEvents, listener: (data: any) => void) {
         EE.on(event, listener);
     }
-    emit(event: TEvents, data: any) {
-        EE.emit(event, data);
-    }
     off(event: TEvents, listner: Function) {
         EE.off(event, listner);
     }
+    // emit(event: TEvents, data: any) {
+    //     EE.emit(event, data);
+    // }
 
     // IMPORT & EXPORT
     toData() {
@@ -143,7 +141,7 @@ export default class Editor {
             let element;
             if (data.type === 'textbox' && data.text) element = this.textbox(data.text, data);
             if (data.type === 'image' && data.src) element = this.image(data.src, data);
-            if (data.type === 'group' && data.children) element = this.toGroup(data.children.map(loadElement) as WrapElement[], data);
+            if (data.type === 'group' && data.children) element = this.toGroup(data.children.map(loadElement) as TDMElements | TDMElements[], data);
             if (element) this.add(element);
             return element;
         };
@@ -186,7 +184,6 @@ export default class Editor {
         this.loadFromJSON(SO.stack[SO.index - 1]);
         this._undoLoad = false;
     }
-
     bringToFront(element: HTMLElement) {
         this.canvas.insertAdjacentElement('beforeend', element);
     }
@@ -207,7 +204,6 @@ export default class Editor {
 
         EE.on('element:active', (elements: TDMElements[]) => {
             this._activeElement = elements;
-
             this.getElements().forEach((element) => (elements.includes(element) ? element.classList.add('focus') : element.classList.remove('focus')));
         });
         EE.on('element:discardActive', () => {

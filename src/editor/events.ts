@@ -33,7 +33,6 @@ class Observable {
 
 class StackObservable extends Observable {
     stack: { elements: IElementData[]; effects: IEffectData[] }[] = [];
-
     _index = 0;
 
     get index() {

@@ -7,6 +7,7 @@ export class BasicElement extends HTMLElement {
 
     __interaction;
     __isEditing = false;
+
     __removeDrag = () => {};
     __removeRotate = () => {};
     __removeSize = () => {};
@@ -18,6 +19,23 @@ export class BasicElement extends HTMLElement {
             EE.emit('element:select', this);
             EE.emit('element:active', [this]);
         });
+    }
+
+    get __flipX() {
+        return !((this.style.scale.split(' ')[0] ?? '1') === '1');
+    }
+    set __flipX(isFlipX: boolean) {
+        const flipY = this.__flipY ? '-1' : '1';
+        if (isFlipX) this.style.scale = `-1 ${flipY}`;
+        else this.style.scale = `1  ${flipY}`;
+    }
+    get __flipY() {
+        return !((this.style.scale.split(' ')[1] ?? '1') === '1');
+    }
+    set __flipY(isFlipY: boolean) {
+        const flipX = this.__flipX ? '-1' : '1';
+        if (isFlipY) this.style.scale = `${flipX} -1`;
+        else this.style.scale = `${flipX} 1`;
     }
 
     // INTERACTION

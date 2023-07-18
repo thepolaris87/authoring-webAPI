@@ -1,6 +1,6 @@
 import { customAlphabet } from 'nanoid';
 
-// ELEMENT STYLE TO NUMBER
+// NUMBER
 export const pxToNumber = (px: string) => px.split(' ').map((s) => Number(s.replace('px', ''))) ?? [];
 export const degToNumber = (deg: string) => deg.split(' ').map((s) => Number(s.replace('deg', ''))) ?? [];
 
