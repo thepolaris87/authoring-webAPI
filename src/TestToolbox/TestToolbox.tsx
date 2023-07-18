@@ -21,7 +21,6 @@ export default function TestToolbox() {
 
     const onInsertText = () => {
         if (!editor) return;
-        console.log(editor);
         const textbox = editor.textbox('TEXT');
         editor.add(textbox);
     };
@@ -127,6 +126,17 @@ export default function TestToolbox() {
         if (!editor) return;
         const s = editor.getActiveElements();
         if (s[0]) editor.sendToBack(s[0]);
+    };
+    const onFlipX = () => {
+        if (!editor) return;
+        const s = editor.getActiveElements();
+        s[0].__flipX = !s[0].__flipX;
+    };
+
+    const onFlipY = () => {
+        if (!editor) return;
+        const s = editor.getActiveElements();
+        s[0].__flipY = !s[0].__flipY;
     };
 
     return (
@@ -256,6 +266,18 @@ export default function TestToolbox() {
                 <div>
                     <button className="border p-1 m-1 rounded" onClick={onSendBackward}>
                         BACKWARD
+                    </button>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <button className="border p-1 m-1 rounded" onClick={onFlipX}>
+                        FLIP X
+                    </button>
+                </div>
+                <div>
+                    <button className="border p-1 m-1 rounded" onClick={onFlipY}>
+                        FLIP Y
                     </button>
                 </div>
             </div>

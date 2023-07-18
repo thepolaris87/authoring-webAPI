@@ -1,6 +1,6 @@
 import EE from './events';
 import Interaction from './interaction';
-import { applyStyle, pxToNumber } from './util';
+import { applyStyle, flipToNumber, pxToNumber } from './util';
 
 export class BasicElement extends HTMLElement {
     static __name = 'dm-basic';
@@ -22,20 +22,22 @@ export class BasicElement extends HTMLElement {
     }
 
     get __flipX() {
-        return !((this.style.scale.split(' ')[0] ?? '1') === '1');
+        return this.getAttribute('flip-x') === 'true';
     }
     set __flipX(isFlipX: boolean) {
-        const flipY = this.__flipY ? '-1' : '1';
-        if (isFlipX) this.style.scale = `-1 ${flipY}`;
-        else this.style.scale = `1  ${flipY}`;
+        this.setAttribute('flip-x', String(isFlipX));
+        const flipX = flipToNumber(isFlipX);
+        const flipY = flipToNumber(this.__flipY);
+        this.style.scale = `${flipX} ${flipY}`;
     }
     get __flipY() {
-        return !((this.style.scale.split(' ')[1] ?? '1') === '1');
+        return this.getAttribute('flip-y') === 'true';
     }
     set __flipY(isFlipY: boolean) {
-        const flipX = this.__flipX ? '-1' : '1';
-        if (isFlipY) this.style.scale = `${flipX} -1`;
-        else this.style.scale = `${flipX} 1`;
+        this.setAttribute('flip-y', String(isFlipY));
+        const flipX = flipToNumber(this.__flipX);
+        const flipY = flipToNumber(isFlipY);
+        this.style.scale = `${flipX} ${flipY}`;
     }
 
     // INTERACTION
@@ -69,7 +71,7 @@ export class WrapElement extends BasicElement {
         const key: TDataMap[typeof type] = `__${type}`;
         const elementData = this[key]?.();
 
-        return { id: this.id, ...elementData, cssText: this.style.cssText };
+        return { id: this.id, ...elementData, cssText: this.style.cssText, flipX: this.__flipX, flipY: this.__flipY };
     }
     __textbox() {
         const text = this.querySelector('p')?.innerHTML ?? '';

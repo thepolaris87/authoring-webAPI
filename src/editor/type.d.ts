@@ -2,6 +2,8 @@
 interface IElementOptions {
     id?: string;
     cssText?: string;
+    flipX?: boolean;
+    flipY?: boolean;
 }
 
 interface IWrapElementOptions extends IElementOptions {}
@@ -18,6 +20,8 @@ interface IElementData {
     type?: string;
     cssText?: string;
     src?: string;
+    filpX?: boolean;
+    flipY?: boolean;
     children?: IElementData[];
 }
 

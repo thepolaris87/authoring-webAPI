@@ -1,8 +1,9 @@
 import { customAlphabet } from 'nanoid';
 
-// NUMBER
+// ELEMENT - NUMBER
 export const pxToNumber = (px: string) => px.split(' ').map((s) => Number(s.replace('px', ''))) ?? [];
 export const degToNumber = (deg: string) => deg.split(' ').map((s) => Number(s.replace('deg', ''))) ?? [];
+export const flipToNumber = (flip: boolean) => (flip ? -1 : 1);
 
 // UTIL
 export const generateId = () => customAlphabet('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 8)();
