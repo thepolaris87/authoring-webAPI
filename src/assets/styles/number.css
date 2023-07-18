@@ -1,0 +1,36 @@
+.number:not(.fraction) > * {
+    display: inline-block;
+    width: 10px;
+    text-align: center;
+}
+
+.fraction {
+    display: inline-flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.fraction > :nth-child(2) {
+    border-top: 1px solid;
+}
+
+.bracket.op > *::before {
+    content: '(';
+}
+
+.bracket.cl > *::before {
+    content: ')';
+}
+
+.bracket-frac {
+    font-size: 32px;
+    font-weight: 300;
+    padding-bottom: 6px;
+}
+.bracket-frac.op > *::before {
+    content: '(';
+}
+
+.bracket-frac.cl > *::before {
+    content: ')';
+}

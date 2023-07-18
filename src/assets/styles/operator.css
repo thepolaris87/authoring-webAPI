@@ -1,0 +1,25 @@
+.operator {
+    font-weight: 600;
+}
+
+.operator > * {
+    display: inline-block;
+    text-align: center;
+    width: 20px;
+}
+
+.divide::before {
+    content: '÷';
+}
+
+.add::before {
+    content: '+';
+}
+
+.substract::before {
+    content: '\2212';
+}
+
+.multiply::before {
+    content: '×';
+}
