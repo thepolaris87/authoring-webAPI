@@ -9,7 +9,7 @@ export default class Editor {
     canvas;
     private _effects: Record<string, Effects> = {};
     private _activeElement: TDMElements[] = [];
-    private _undoLoad = false;
+    private _stackLoad = false;
 
     inactiveFocus = () => {};
     inactiveSelection = () => {};
@@ -171,17 +171,17 @@ export default class Editor {
     }
     undo() {
         SO.index -= 1;
-        this._undoLoad = true;
+        this._stackLoad = true;
         this.clear();
         this.loadFromJSON(SO.stack[SO.index - 1]);
-        this._undoLoad = false;
+        this._stackLoad = false;
     }
     redo() {
         SO.index += 1;
-        this._undoLoad = true;
+        this._stackLoad = true;
         this.clear();
         this.loadFromJSON(SO.stack[SO.index - 1]);
-        this._undoLoad = false;
+        this._stackLoad = false;
     }
     bringToFront(element: HTMLElement) {
         this.canvas.insertAdjacentElement('beforeend', element);
@@ -265,7 +265,7 @@ export default class Editor {
     activeStack() {
         this.inactiveStack();
         const subscribe = () => {
-            if (this._undoLoad) return;
+            if (this._stackLoad) return;
             SO.stack = SO.stack.slice(0, SO.index);
             SO.stack.push(this.toData());
             SO.index = SO.stack.length;
@@ -305,6 +305,8 @@ export default class Editor {
         wrap.setAttribute('data-type', type);
         wrap.id = options?.id ?? generateId();
         wrap.style.cssText = options?.cssText ?? '';
+        wrap.__flipX = !!options?.flipX;
+        wrap.__flipY = !!options?.flipY;
 
         return wrap;
     }
@@ -315,6 +317,8 @@ export default class Editor {
         group.setAttribute('data-type', 'group');
         group.id = options?.id ?? generateId();
         group.style.cssText = options?.cssText ?? '';
+        group.__flipX = !!options?.flipX;
+        group.__flipY = !!options?.flipY;
 
         return group;
     }

@@ -2,7 +2,7 @@ import './assets/styles';
 import './App.css';
 import { useEffect, useRef, useState } from 'react';
 import Editor from './editor/core';
-import EditorToolbox from './TestToolbox/TestToolbox';
+import TestToolbox from './TestToolbox/TestToolbox';
 import { useSetAtom } from 'jotai';
 import { editorAtom, testEditorAtom } from './atoms/atoms';
 import Toolbox from './Toolbox/Toolbox';
@@ -56,7 +56,7 @@ export default function App() {
                 <div className="fixed inset-0 flex justify-center items-center bg-[#0000004c]">
                     <div className="w-[95%] h-[95%] p-1 border rounded bg-white">
                         <header className="flex">
-                            <EditorToolbox />
+                            <TestToolbox />
                             <button className="justify-end rounded border p-1 h-fit" onClick={onOpnEditorClick.bind(null, false)}>
                                 CLOSE
                             </button>
