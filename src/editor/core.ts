@@ -3,7 +3,7 @@ import { BasicElement, GroupElement, WrapElement } from './elements';
 import Effects from './effets';
 import { generateId, isIntersect } from './util';
 import './editor.css';
-type TDMElements = WrapElement | GroupElement;
+export type TDMElements = WrapElement | GroupElement;
 
 export default class Editor {
     canvas;
@@ -81,7 +81,6 @@ export default class Editor {
 
         wrap.prepend(paragraph);
         wrap.__addEditable();
-
         return wrap;
     }
     image(url: string, options?: IImageOptions) {
@@ -214,6 +213,10 @@ export default class Editor {
         return () => {
             this.canvas.removeEventListener('pointerdown', pointerdown);
         };
+    }
+    setActiveFocus(elements: TDMElements[]) {
+        this._activeElement = elements;
+        this.getElements().forEach((element) => (elements.includes(element) ? element.classList.add('focus') : element.classList.remove('focus')));
     }
     activeSelection() {
         this.inactiveSelection();

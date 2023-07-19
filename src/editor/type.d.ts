@@ -1,3 +1,7 @@
+interface KeyframeEffectOptions {
+    type?: TEffect;
+}
+
 // Editor
 interface IElementOptions {
     id?: string;
@@ -41,5 +45,6 @@ type TSize = 'element:size' | 'element:size:end';
 type TEffects = 'effects:add' | 'effects:delete';
 // stack
 type TStack = 'stack';
+type TEffect = 'fadeIn' | 'fadeOut' | 'opacity' | 'sound' | 'move' | 'scale' | 'rotate';
 
 type TEvents = TBasic | TFocus | TDrag | TRotate | TSize | TEffects | TStack;
