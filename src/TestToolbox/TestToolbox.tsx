@@ -2,7 +2,6 @@ import { useAtomValue } from 'jotai';
 import { testEditorAtom } from '../atoms/atoms';
 import { useRef } from 'react';
 import { GroupElement, WrapElement } from '../editor/elements';
-import { pxToNumber } from '../editor/util';
 
 export default function TestToolbox() {
     const editor = useAtomValue(testEditorAtom);
@@ -18,10 +17,8 @@ export default function TestToolbox() {
         editor.clear();
         editor.loadFromJSON(window.localStorage.getItem('au') ?? '');
     };
-
     const onInsertText = () => {
         if (!editor) return;
-        console.log(editor);
         const textbox = editor.textbox('TEXT');
         editor.add(textbox);
     };
@@ -60,8 +57,7 @@ export default function TestToolbox() {
         const s = editor.getActiveElements();
         if (s[0]) {
             const effects = editor.effect(s[0]);
-            effects.delete();
-            const anim = effects.add({ keyframes: [{ opacity: '0' }, { opacity: '1' }], options: { duration: 1000 } });
+            const anim = effects.addFadeIn();
             anim.ready.then(() => effects.play({ init: true }));
         }
     };
@@ -70,13 +66,35 @@ export default function TestToolbox() {
         const s = editor.getActiveElements();
         if (s[0]) {
             const effects = editor.effect(s[0]);
-            effects.delete();
-            const [ox = 0, oy = 0] = pxToNumber(s[0].style.translate);
-            const [dx, dy] = [ox + 100, oy + 100];
-            const anim = effects.add({
-                keyframes: [{ translate: `${dx}px ${dy}px` }],
-                options: { duration: 1000 }
-            });
+            const anim = effects.addMove(s);
+            anim.ready.then(() => effects.play({ init: true }));
+        }
+    };
+    const onFadeOut = () => {
+        if (!editor) return;
+        const s = editor.getActiveElements();
+        if (s[0]) {
+            const effects = editor.effect(s[0]);
+            const anim = effects.addFadeOut();
+            anim.ready.then(() => effects.play({ init: true }));
+        }
+    };
+    const onRotate = () => {
+        if (!editor) return;
+        const s = editor.getActiveElements();
+        if (s[0]) {
+            const effects = editor.effect(s[0]);
+            const anim = effects.addRotate();
+            console.log(anim);
+            anim.ready.then(() => editor.play(s[0], { init: true }));
+        }
+    };
+    const onScale = () => {
+        if (!editor) return;
+        const s = editor.getActiveElements();
+        if (s[0]) {
+            const effects = editor.effect(s[0]);
+            const anim = effects.addScale();
             anim.ready.then(() => effects.play({ init: true }));
         }
     };
@@ -203,8 +221,23 @@ export default function TestToolbox() {
                     </button>
                 </div>
                 <div>
+                    <button className="border p-1 m-1 rounded" onClick={onFadeOut}>
+                        Fade Out
+                    </button>
+                </div>
+                <div>
                     <button className="border p-1 m-1 rounded" onClick={onMove}>
                         Move
+                    </button>
+                </div>
+                <div>
+                    <button className="border p-1 m-1 rounded" onClick={onScale}>
+                        Scale
+                    </button>
+                </div>
+                <div>
+                    <button className="border p-1 m-1 rounded" onClick={onRotate}>
+                        Rotate
                     </button>
                 </div>
                 <div>
