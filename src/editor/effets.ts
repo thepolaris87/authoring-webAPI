@@ -22,15 +22,14 @@ export default class Effects {
         return animation;
     }
     delete(animation?: Animation) {
-        if (animation) this._animations.delete(animation); // element의 특정 애니메이션 삭제
-        else this._animations.clear(); // element의 전체 애니메이션 삭제
+        if (animation) this._animations.delete(animation);
+        else this._animations.clear();
         EE.emit('effects:delete');
     }
     getAnimations() {
         return this._animations;
     }
     toData() {
-        console.log(this._animations);
         const animation = Array.from(this._animations).reduce((p, anim) => {
             p.push({ keyframes: anim?.__getKeyframes(), options: anim.__getOptions() });
             return p;
@@ -89,7 +88,6 @@ export default class Effects {
         const animation = new Animation(this.element, keyframes, { ...this._keyframeDefaultOption, ...options });
         this._animations.add(animation);
         EE.emit('effects:add');
-        console.log(this._animations, animation);
         return animation;
     }
     addScale() {
