@@ -6,7 +6,9 @@ import EditorToolbox from './TestToolbox/TestToolbox';
 import { useSetAtom } from 'jotai';
 import { editorAtom, testEditorAtom } from './atoms/atoms';
 import Toolbox from './Toolbox/Toolbox';
-import { Animation } from './Animation/Animation';
+// import { Animation } from './Animation/Animation';
+import ViewContainer from './SideContainer/ViewContainer';
+import FormatContainer from './SideContainer/FormatContainer';
 
 export default function App() {
     const canvasRef = useRef<HTMLDivElement>(null);
@@ -34,8 +36,8 @@ export default function App() {
             <div className="flex flex-col h-screen">
                 <header className="flex p-1 items-center">
                     <div className="flex-[1]">
-                        {/* <Toolbox /> */}
-                        <EditorToolbox />
+                        <Toolbox />
+                        {/* <EditorToolbox /> */}
                     </div>
                     <button className="justify-end rounded border p-1" onClick={onOpnEditorClick.bind(null, true)}>
                         OPEN EDITOR
@@ -43,13 +45,16 @@ export default function App() {
                 </header>
                 <hr className="border-cyan-950"></hr>
                 <main className="flex">
-                    <div className="flex-[1] border p-1">VIEW CONTAINER</div>
+                    {/* <div className="flex-[1] border p-1">VIEW CONTAINER</div>
                     <div ref={testRef} className="w-[800px] h-[300px] border rounded"></div>
-                    <div className="flex-[1.5] border p-1">FORMAT CONTAINER</div>
+                    <div className="flex-[1.5] border p-1">FORMAT CONTAINER</div> */}
+                    <ViewContainer />
+                    <div ref={canvasRef} className="w-[800px] h-[500px] border rounded"></div>
+                    <FormatContainer />
                 </main>
                 <hr className="border-cyan-950"></hr>
                 <footer className="flex-[1] overflow-auto p-1">
-                    <Animation />
+                    {/* <Animation /> */}
                 </footer>
             </div>
             {openExEditor && (
