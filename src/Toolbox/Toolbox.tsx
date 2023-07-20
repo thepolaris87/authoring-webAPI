@@ -2,7 +2,7 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { ActiveElementsAtom, editorAtom } from '../atoms/atoms';
 import { useEffect, useRef, useState } from 'react';
 import { GroupElement, WrapElement } from '../editor/elements';
-import { MdSave, MdDownload, MdTextFields, MdImage } from 'react-icons/md';
+import { MdSave, MdDownload, MdPreview, MdClose, MdTextFields, MdImage } from 'react-icons/md';
 import { BsFillTrashFill } from 'react-icons/bs';
 import { LiaObjectGroup, LiaObjectUngroup } from 'react-icons/lia';
 import { BsChevronDoubleUp, BsChevronUp, BsChevronDown, BsChevronDoubleDown } from 'react-icons/bs';
@@ -17,6 +17,7 @@ export default function Toolbox() {
     const setActiveElement = useSetAtom(ActiveElementsAtom);
     const activeElements = useAtomValue(ActiveElementsAtom);
     const [fontStyle, setFontStyle] = useState({ bold: false, italic: false });
+    const [modalOpen, setModalOpen] = useState(false);
 
     useEffect(() => {
         const handleElementSelect = () => {
@@ -76,6 +77,11 @@ export default function Toolbox() {
         if (!editor) return;
         editor.clear();
         editor.loadFromJSON(window.localStorage.getItem('au') ?? '');
+    };
+
+    const onPreview = () => {
+        setModalOpen(true);
+        console.log(modalOpen);
     };
 
     const onInsertText = () => {
@@ -164,6 +170,25 @@ export default function Toolbox() {
                     <button className="border p-1 m-1 rounded" onClick={onLoad}>
                         <MdDownload />
                     </button>
+                </div>
+                <div className="relative">
+                    <button className="border p-1 m-1 rounded" onClick={onPreview}>
+                        <MdPreview />
+                    </button>
+                    {modalOpen && (
+                        <div>
+                            <div className="fixed inset-0 flex justify-center items-center bg-[#0000004c] z-10">
+                                <div className="w-[95%] h-[95%] p-1 border rounded bg-white">
+                                    <div className="flex justify-between p-3">
+                                        <h1>Preview</h1>
+                                        <div onClick={() => setModalOpen(false)} className="cursor-pointer">
+                                            <MdClose />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
             <div className="flex self-center">
