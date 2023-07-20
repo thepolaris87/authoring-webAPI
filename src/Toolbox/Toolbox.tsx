@@ -81,7 +81,6 @@ export default function Toolbox() {
 
     const onPreview = () => {
         setModalOpen(true);
-        console.log(modalOpen);
     };
 
     const onInsertText = () => {
