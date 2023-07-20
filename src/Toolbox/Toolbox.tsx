@@ -1,7 +1,7 @@
-import { useAtomValue, useSetAtom } from "jotai";
-import { ActiveElementsAtom, editorAtom } from "../atoms/atoms";
-import { useEffect, useRef, useState } from "react";
-import { GroupElement, WrapElement } from "../editor/elements";
+import { useAtomValue, useSetAtom } from 'jotai';
+import { ActiveElementsAtom, editorAtom } from '../atoms/atoms';
+import { useEffect, useRef, useState } from 'react';
+import { GroupElement, WrapElement } from '../editor/elements';
 import { MdSave, MdDownload, MdTextFields, MdImage } from 'react-icons/md';
 import { BsFillTrashFill } from 'react-icons/bs';
 import { LiaObjectGroup, LiaObjectUngroup } from 'react-icons/lia';
@@ -16,7 +16,7 @@ export default function Toolbox() {
     const [isFont, setIsFont] = useState<boolean>(false);
     const setActiveElement = useSetAtom(ActiveElementsAtom);
     const activeElements = useAtomValue(ActiveElementsAtom);
-
+    const [fontStyle, setFontStyle] = useState({ bold: false, italic: false });
 
     useEffect(() => {
         const handleElementSelect = () => {
@@ -62,10 +62,10 @@ export default function Toolbox() {
         };
     }, [editor]);
 
-    useEffect(()=> {
-        if(activeElements[0]?.dataset?.type === "textbox") setIsFont(true);
+    useEffect(() => {
+        if (activeElements[0]?.dataset?.type === 'textbox') setIsFont(true);
         else setIsFont(false);
-    }, [activeElements])
+    }, [activeElements]);
 
     const onSave = () => {
         if (!editor) return;
@@ -124,8 +124,6 @@ export default function Toolbox() {
         if (s[0]) editor.sendToBackward(s[0]);
     };
 
-
-
     //
     const onSendToBack = () => {
         if (!editor) return;
@@ -176,26 +174,25 @@ export default function Toolbox() {
                 </div>
                 <div>
                     <button className="border p-1 m-1 rounded" onClick={onInsertImage}>
-                    <MdImage />
+                        <MdImage />
                     </button>
                 </div>
                 <div>
                     <button className="border p-1 m-1 rounded" onClick={onRemove}>
-                    <BsFillTrashFill />
-
+                        <BsFillTrashFill />
                     </button>
                 </div>
             </div>
-            
+
             <div className="flex self-center">
                 <div>
                     <button className="border p-1 m-1 rounded" onClick={onToGroup}>
-                    <LiaObjectGroup />
+                        <LiaObjectGroup />
                     </button>
                 </div>
                 <div>
                     <button className="border p-1 m-1 rounded" onClick={onUngroup}>
-                    <LiaObjectUngroup />
+                        <LiaObjectUngroup />
                     </button>
                 </div>
             </div>
@@ -203,66 +200,68 @@ export default function Toolbox() {
             <div className="flex  self-center">
                 <div>
                     <button className="border p-1 m-1 rounded" onClick={onBringToFront}>
-                    <BsChevronDoubleUp />
+                        <BsChevronDoubleUp />
                     </button>
                 </div>
                 <div>
                     <button className="border p-1 m-1 rounded" onClick={onBringFoward}>
-                    <BsChevronUp />
+                        <BsChevronUp />
                     </button>
                 </div>
                 <div>
                     <button className="border p-1 m-1 rounded" onClick={onSendToBack}>
-                    <BsChevronDoubleDown />
+                        <BsChevronDoubleDown />
                     </button>
                 </div>
                 <div>
                     <button className="border p-1 m-1 rounded" onClick={onSendBackward}>
-                    <BsChevronDown />
+                        <BsChevronDown />
                     </button>
                 </div>
             </div>
-            {isFont &&
-            <>
-            <div className="w-0 h-5 mx-2 border self-center" />
-            <div className="flex">
-                <div className="flex items-center">
-                    <button className="border p-1 m-1 rounded" onClick={onColor}>
-                        <AiOutlineFontColors />
-                    </button>
-                    <input type="color" onChange={(e) => (color.current = e.target.value)}></input>
-                </div>
-                {/* <div>
-                    <button className="border p-1 m-1 rounded" onClick={onFontWeight.bind(null, 'normal')}>
-                        Normal
-                    </button>
-                </div> */}
-                <div className="flex items-center">
-                    <button className="border p-1 m-1 rounded" onClick={onFontWeight.bind(null, 'bold')}>
-                    <BiBold />
-                    </button>
-                </div>
-            </div>
-            <div className="flex items-center">
-                <div>
-                    <button className="border p-1 m-1 rounded" onClick={onFontSize}>
-                        <AiOutlineFontSize />
-                    </button>
-                    <input className="border rounded w-24" onChange={(e) => (fontSize.current = e.target.value)}></input>
-                </div>
-                {/* <div>
-                    <button className="border p-1 m-1 rounded" onClick={onFontStyle.bind(null, 'normal')}>
-                        Normal
-                    </button>
-                </div> */}
-                <div className="flex items-center">
-                    <button className="border p-1 m-1 rounded" onClick={onFontStyle.bind(null, 'italic')}>
-                        <BiItalic />
-                    </button>
-                </div>
-            </div>
-            </>
-            }
+            {isFont && (
+                <>
+                    <div className="w-0 h-5 mx-2 border self-center" />
+                    <div className="flex">
+                        <div className="flex items-center">
+                            <button className="border p-1 m-1 rounded" onClick={onColor}>
+                                <AiOutlineFontColors />
+                            </button>
+                            <input type="color" onChange={(e) => (color.current = e.target.value)}></input>
+                        </div>
+                        <div className="flex items-center">
+                            <button
+                                className="border p-1 m-1 rounded"
+                                onClick={() => {
+                                    setFontStyle((prev) => ({ ...prev, bold: !fontStyle.bold }));
+                                    fontStyle.bold ? onFontWeight('bold') : onFontWeight('normal');
+                                }}
+                            >
+                                <BiBold />
+                            </button>
+                        </div>
+                    </div>
+                    <div className="flex items-center">
+                        <div>
+                            <button className="border p-1 m-1 rounded" onClick={onFontSize}>
+                                <AiOutlineFontSize />
+                            </button>
+                            <input className="border rounded w-24" onChange={(e) => (fontSize.current = e.target.value)}></input>
+                        </div>
+                        <div className="flex items-center">
+                            <button
+                                className="border p-1 m-1 rounded"
+                                onClick={() => {
+                                    setFontStyle((prev) => ({ ...prev, italic: !fontStyle.italic }));
+                                    fontStyle.italic ? onFontStyle('italic') : onFontStyle('normal');
+                                }}
+                            >
+                                <BiItalic />
+                            </button>
+                        </div>
+                    </div>
+                </>
+            )}
         </div>
     );
 }
