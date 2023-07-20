@@ -1,6 +1,8 @@
 import { atom } from 'jotai';
-import Editor from '../editor/core';
+import Editor, { TDMElements } from '../editor/core';
 
 export const editorAtom = atom<Editor | null>(null);
 
 export const testEditorAtom = atom<Editor | null>(null);
+
+export const activeElements = atom<TDMElements | null>(null);
