@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { BiPalette, BiTrash } from 'react-icons/bi';
 import { Slider } from '../components/Slider';
 import { ActiveElementsAtom, editorAtom } from '../../atoms/atoms';
@@ -7,8 +7,8 @@ import { useAtomValue } from 'jotai';
 export const FadeIn = ({ index, animations }: { index: number; animations: any }) => {
     const editor = useAtomValue(editorAtom);
     const activeElements = useAtomValue(ActiveElementsAtom);
-    const animationList = Array.from(animations._animations) as any;
-    const animation = animationList[index];
+    const animationList = useMemo(() => Array.from(animations._animations) as any, [animations]);
+    const animation = useMemo(() => animationList[index], [animationList, index]);
 
     const setTimeLine = useCallback(
         (startTime: number, endTime: number) => {

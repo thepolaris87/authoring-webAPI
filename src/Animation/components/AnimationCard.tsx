@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { MdChevronRight, MdKeyboardArrowDown } from 'react-icons/md';
 import { FadeIn, FadeOut, Move, Rotate, Scale, Opacity } from '../effects';
 import { ActiveElementsAtom, editorAtom } from '../../atoms/atoms';
@@ -13,8 +13,8 @@ export const AnimationCard = ({ element, effects, animations }: AnimationCardPro
     const [play, setPlay] = useState(false);
     const inputRef = useRef<HTMLInputElement | null>(null);
     const elements = editor?.getElements();
-    const el = elements?.filter((_element) => _element.id === element.id);
-    const _effects = effects.filter((effect) => effect.id === element.id);
+    const el = useMemo(() => elements?.filter((_element) => _element.id === element.id), [element.id, elements]);
+    const _effects = useMemo(() => effects.filter((effect) => effect.id === element.id), [element.id, effects]);
     const _animations = animations && _effects[0] && animations.filter((animation: IEffectData) => animation.id === _effects[0].id);
     const effectList = ['Fade In', 'Fade Out', 'Blink', 'Move', 'Scale', 'Rotate']; // Sound
 
