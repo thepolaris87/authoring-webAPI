@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from 'react';
 import Editor from './editor/core';
 import EditorToolbox from './TestToolbox/TestToolbox';
 import { useSetAtom } from 'jotai';
-import { editorAtom, testEditorAtom } from './atoms/atoms';
+import { editorAtom } from './atoms/atoms';
 import Toolbox from './Toolbox/Toolbox';
-// import { Animation } from './Animation/Animation';
+import { Animation } from './Animation/Animation';
 import ViewContainer from './SideContainer/ViewContainer';
 import FormatContainer from './SideContainer/FormatContainer';
 
@@ -14,9 +14,7 @@ export default function App() {
     const canvasRef = useRef<HTMLDivElement>(null);
     const testRef = useRef<HTMLDivElement>(null);
     const setEditorAtom = useSetAtom(editorAtom);
-    const sestTestEditorAtom = useSetAtom(testEditorAtom);
     const [openExEditor, setOpenExEditor] = useState(false);
-
     const onOpnEditorClick = (open: boolean) => setOpenExEditor(open);
 
     useEffect(() => {
@@ -24,12 +22,6 @@ export default function App() {
         const editor = new Editor(canvasRef.current);
         setEditorAtom(editor);
     }, [setEditorAtom]);
-
-    useEffect(() => {
-        if (!testRef.current) return;
-        const testEditor = new Editor(testRef.current);
-        sestTestEditorAtom(testEditor);
-    }, [sestTestEditorAtom, openExEditor]);
 
     return (
         <>
@@ -54,7 +46,7 @@ export default function App() {
                 </main>
                 <hr className="border-cyan-950"></hr>
                 <footer className="flex-[1] overflow-auto p-1">
-                    {/* <Animation /> */}
+                    <Animation />
                 </footer>
             </div>
             {openExEditor && (

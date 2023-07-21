@@ -20,7 +20,6 @@ export default class Editor {
         this.canvas = element;
         this.canvas.classList.add('dm-canvas');
         this.canvas.tabIndex = 0;
-
         // import('./editor.css');
 
         // DEFINE CUSTOM Element
@@ -98,13 +97,17 @@ export default class Editor {
 
     // EFFECT - ANIMATION
     effect(element: HTMLElement) {
+        console.log(this._effects[element.id]);
         if (element.id in this._effects) return this._effects[element.id];
         const effect = new Effects(element);
         this._effects[element.id] = effect;
         return effect;
     }
-    play(element: HTMLElement, options?: { init?: boolean }) {
-        this._effects[element.id]?.play(options);
+    play(element: HTMLElement) {
+        return this._effects[element.id]?.play();
+    }
+    stop(element: HTMLElement) {
+        this._effects[element.id]?.cancel();
     }
 
     // EVENT EMITTER
@@ -129,7 +132,6 @@ export default class Editor {
             p.push(c.toData());
             return p;
         }, [] as IEffectData[]);
-
         return { elements, effects };
     }
 
@@ -164,6 +166,7 @@ export default class Editor {
         return Array.from(this.canvas.children) as TDMElements[];
     }
     getEffects() {
+        console.log(this._effects);
         return Object.values(this._effects);
     }
     clear() {
@@ -233,7 +236,6 @@ export default class Editor {
         };
         const pointerupListner = () => {
             const targets = this.getElements().filter((element) => isIntersect(selectionElement, element));
-
             EE.emit('element:active', targets);
             selectionElement.style.width = '0';
             selectionElement.style.height = '0';
@@ -242,6 +244,8 @@ export default class Editor {
             document.removeEventListener('pointerup', pointerupListner);
         };
         const pointerdown = (e: PointerEvent) => {
+            const targets = this.getActiveElements();
+            EE.emit('element:active', targets);
             if (e.target !== this.canvas) return;
             slelectionClient.x = e.clientX;
             slelectionClient.y = e.clientY;

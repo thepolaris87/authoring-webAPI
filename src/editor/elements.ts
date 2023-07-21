@@ -132,7 +132,6 @@ export class GroupElement extends BasicElement {
                 child.__removeDrag();
                 child.__removeRotate();
                 child.__removeSize();
-
                 const [x1 = 0, y1 = 0] = pxToNumber(child.style.translate);
                 const x2 = x1 + child.offsetWidth;
                 const y2 = y1 + child.offsetHeight;

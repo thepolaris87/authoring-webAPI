@@ -85,7 +85,6 @@ export default function Toolbox() {
 
     const onInsertText = () => {
         if (!editor) return;
-        console.log(editor);
         const textbox = editor.textbox('TEXT');
         editor.add(textbox);
     };
