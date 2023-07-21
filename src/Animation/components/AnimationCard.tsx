@@ -15,7 +15,10 @@ export const AnimationCard = ({ element, effects, animations }: AnimationCardPro
     const elements = editor?.getElements();
     const el = useMemo(() => elements?.filter((_element) => _element.id === element.id), [element.id, elements]);
     const _effects = useMemo(() => effects.filter((effect) => effect.id === element.id), [element.id, effects]);
-    const _animations = animations && _effects[0] && animations.filter((animation: IEffectData) => animation.id === _effects[0].id);
+    const _animations = useMemo(
+        () => animations && _effects[0] && animations.filter((animation: IEffectData) => animation.id === _effects[0].id),
+        [animations, _effects]
+    );
     const effectList = ['Fade In', 'Fade Out', 'Blink', 'Move', 'Scale', 'Rotate']; // Sound
 
     const onClickDropDown = (effect: string) => {

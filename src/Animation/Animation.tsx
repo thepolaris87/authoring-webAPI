@@ -21,7 +21,7 @@ export const Animation = () => {
 
     useEffect(() => {
         const addElementListener = () => {
-            const _elements = editor?.toData();
+            const _elements = editor?.toElements();
             setElements({ elements: _elements, effects: _elements?._effects });
         };
         editor?.on('element:add', addElementListener);
