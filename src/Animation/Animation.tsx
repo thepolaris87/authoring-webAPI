@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useAtomValue } from 'jotai';
 import { editorAtom } from '../atoms/atoms';
 import { AnimationList } from './components/AnimationList';
@@ -9,13 +9,22 @@ export const Animation = () => {
     const [elements, setElements] = useState<TData>();
     const [effects, setEffects] = useState<IEffectData[]>();
 
+    const onPlay = async () => {
+        setPlay(false);
+        await editor?.play();
+        setPlay(true);
+    };
+    const onStop = () => {
+        setPlay(true);
+        editor?.stop();
+    };
+
     useEffect(() => {
         const addElementListener = () => {
-            const elements = editor?.toData();
-            if (elements) setElements(elements as TData);
-            const effects = editor?.getEffects();
-            if (effects) setEffects(effects);
-            console.log(elements, effects);
+            const _elements = editor?.toData();
+            if (_elements) setElements(_elements as TData);
+            const _effects = editor?.getEffects();
+            if (_effects) setEffects(_effects);
         };
         editor?.on('element:add', addElementListener);
         editor?.on('element:remove', addElementListener);
@@ -24,16 +33,9 @@ export const Animation = () => {
         return () => {
             editor?.off('element:add', addElementListener);
             editor?.off('element:remove', addElementListener);
-            editor?.off('effects:add', addElementListener);
-            editor?.off('effects:delete', addElementListener);
+            editor?.on('effects:add', addElementListener);
+            editor?.on('effects:delete', addElementListener);
         };
-    }, [editor]);
-
-    const updateElements = useCallback(() => {
-        const elements = editor?.toData();
-        if (elements) setElements(elements as TData);
-        const effects = editor?.getEffects();
-        if (effects) setEffects(effects);
     }, [editor]);
 
     return (
@@ -41,18 +43,16 @@ export const Animation = () => {
             <div className="flex items-center justify-between p-[4px_12px]">
                 <h5 className="font-[600]">ANIMATION</h5>
                 {play ? (
-                    <button className="bg-[#84b2f3] hover:bg-[#a7c4ee] text-[white] p-[4px_12px] rounded-md" onClick={() => setPlay(false)}>
+                    <button className="bg-[#84b2f3] hover:bg-[#a7c4ee] text-[white] p-[4px_12px] rounded-md" onClick={() => onPlay()}>
                         PLAY
                     </button>
                 ) : (
-                    <button className="bg-[#747576] hover:bg-[#a2a3a4] text-[white] p-[4px_12px] rounded-md" onClick={() => setPlay(true)}>
+                    <button className="bg-[#747576] hover:bg-[#a2a3a4] text-[white] p-[4px_12px] rounded-md" onClick={() => onStop()}>
                         STOP
                     </button>
                 )}
             </div>
-            {elements && (
-                <AnimationList elements={elements.elements} effects={elements.effects} animations={effects as IEffectData[]} updateElements={updateElements} />
-            )}
+            {elements && <AnimationList elements={elements.elements} effects={elements.effects} animations={effects as IEffectData[]} />}
         </div>
     );
 };

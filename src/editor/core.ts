@@ -97,17 +97,25 @@ export default class Editor {
 
     // EFFECT - ANIMATION
     effect(element: HTMLElement) {
-        console.log(this._effects[element.id]);
         if (element.id in this._effects) return this._effects[element.id];
         const effect = new Effects(element);
         this._effects[element.id] = effect;
         return effect;
     }
-    play(element: HTMLElement) {
-        return this._effects[element.id]?.play();
+    play(element?: HTMLElement) {
+        if (element) return this._effects[element.id]?.play();
+        else
+            return Promise.all(
+                Object.keys(this._effects).map((effectId) => {
+                    return new Promise<void>((resolve) => {
+                        this._effects[effectId]?.play().then(() => resolve());
+                    });
+                })
+            );
     }
-    stop(element: HTMLElement) {
-        this._effects[element.id]?.cancel();
+    stop(element?: HTMLElement) {
+        if (element) this._effects[element.id]?.cancel();
+        else Object.keys(this._effects).map((effectId) => this._effects[effectId]?.cancel());
     }
 
     // EVENT EMITTER
@@ -166,7 +174,6 @@ export default class Editor {
         return Array.from(this.canvas.children) as TDMElements[];
     }
     getEffects() {
-        console.log(this._effects);
         return Object.values(this._effects);
     }
     clear() {
