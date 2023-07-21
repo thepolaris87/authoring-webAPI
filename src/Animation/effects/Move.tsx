@@ -1,23 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import { BiPalette, BiTrash } from 'react-icons/bi';
 import { Slider } from '../components/Slider';
-import { editorAtom } from '../../atoms/atoms';
+import { editorAtom, ActiveElementsAtom } from '../../atoms/atoms';
 import { useAtomValue } from 'jotai';
 import { pxToNumber } from '../../editor/util';
-import { TDMElements } from '../../editor/core';
 
-export const Move = ({
-    index,
-    animations,
-    activeObj,
-    updateElements
-}: {
-    index: number;
-    animations: any;
-    activeObj: TDMElements;
-    updateElements: () => void;
-}) => {
+export const Move = ({ index, animations }: { index: number; animations: any }) => {
     const editor = useAtomValue(editorAtom);
+    const activeElements = useAtomValue(ActiveElementsAtom);
     const animationList = Array.from(animations._animations) as any;
     const animation = animationList[index];
     const { translate } = animation.__keyframes[0];
@@ -31,23 +21,30 @@ export const Move = ({
         (startTime: number, endTime: number) => {
             (animation.effect as KeyframeEffect).updateTiming({ delay: startTime * 1000, duration: (endTime - startTime) * 1000 });
             animation.__updateTiming({ delay: startTime * 1000, duration: (endTime - startTime) * 1000 });
-            updateElements();
         },
-        [animation, updateElements]
+        [animation]
     );
     const onDelete = () => {
-        const effects = editor?.effect(activeObj);
+        const effects = editor?.effect(activeElements[0]);
         if (animation) effects?.delete(animation);
     };
-
-    useEffect(() => {
-        if (!activeObj) return;
-        const [ox = 0, oy = 0] = pxToNumber(activeObj.style.translate);
+    const updateMove = useCallback(() => {
+        if (!activeElements) return;
+        const [ox = 0, oy = 0] = pxToNumber(activeElements[0].style.translate);
         const [dx, dy] = [ox + Number(move.top), oy + Number(move.left)];
         (animation.effect as KeyframeEffect).setKeyframes({ translate: `${dx}px ${dy}px` });
         animation.__setKeyframes([{ translate: `${dx}px ${dy}px` }]);
-        updateElements();
-    }, [move, activeObj, animation, updateElements]);
+    }, [animation, activeElements, move]);
+
+    useEffect(() => {
+        const addElementListener = () => {
+            updateMove();
+        };
+        editor?.on('element:drag:end', addElementListener);
+        return () => {
+            editor?.off('element:drag:end', addElementListener);
+        };
+    }, [editor, updateMove]);
 
     return (
         <div className="flex justify-between items-center mb-1">

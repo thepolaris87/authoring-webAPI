@@ -77,7 +77,7 @@ export default class Effects {
     }
     addFadeIn() {
         const keyframes = [{ opacity: '0' }, { opacity: '1' }];
-        const options: KeyframeEffectOptions = { type: 'fadeIn', duration: Math.random() * 10000 + 50000, delay: 0 };
+        const options: KeyframeEffectOptions = { type: 'fadeIn', duration: 100000, delay: 0 };
         const animation = new Animation(this.element, keyframes, { ...this._keyframeDefaultOption, ...options });
         this._animations.add(animation);
         EE.emit('effects:add');

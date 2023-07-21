@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { MdChevronRight, MdKeyboardArrowDown } from 'react-icons/md';
 import { FadeIn, FadeOut, Move, Rotate, Scale, Opacity } from '../effects';
-import { editorAtom } from '../../atoms/atoms';
-import { useAtomValue } from 'jotai';
+import { ActiveElementsAtom, editorAtom } from '../../atoms/atoms';
+import { useAtomValue, useAtom } from 'jotai';
 
-export const AnimationCard = ({ element, effects, animations, setActiveObj, activeObj, updateElements }: AnimationCardProps) => {
+export const AnimationCard = ({ element, effects, animations }: AnimationCardProps) => {
     const editor = useAtomValue(editorAtom);
+    const [activeElements, setActiveElements] = useAtom(ActiveElementsAtom);
     const [open, setOpen] = useState(true);
     const [dropDown, setDropDown] = useState(false);
     const [_effect, setEffect] = useState('');
@@ -33,7 +34,7 @@ export const AnimationCard = ({ element, effects, animations, setActiveObj, acti
     const onClick = () => {
         if (!el) return;
         editor?.setActiveFocus(el);
-        setActiveObj(el[0]);
+        setActiveElements(el);
     };
     const onPlay = async () => {
         setPlay(true);
@@ -57,7 +58,7 @@ export const AnimationCard = ({ element, effects, animations, setActiveObj, acti
         <div
             className="rounded-[8px] mb-4 p-[4px_10px] shadow-[1px_3px_5px_1px_#cdd8dd] cursor-grab"
             style={{
-                backgroundColor: activeObj && activeObj.id === element.id ? '#d3d1d1bf' : '#ecebeb'
+                backgroundColor: activeElements[0] && activeElements[0].id === element.id ? '#d3d1d1bf' : '#ecebeb'
             }}
             onClick={onClick}
         >
@@ -107,24 +108,12 @@ export const AnimationCard = ({ element, effects, animations, setActiveObj, acti
                     effect.animation.map((_effect, index: number) => {
                         return (
                             <div key={index} className="p-[4px]">
-                                {_effect.options.type === 'fadeIn' && (
-                                    <FadeIn key={index} index={index} animations={_animations[0]} activeObj={activeObj} updateElements={updateElements} />
-                                )}
-                                {_effect.options.type === 'move' && (
-                                    <Move key={index} index={index} animations={_animations[0]} activeObj={activeObj} updateElements={updateElements} />
-                                )}
-                                {_effect.options.type === 'fadeOut' && (
-                                    <FadeOut key={index} index={index} animations={_animations[0]} activeObj={activeObj} updateElements={updateElements} />
-                                )}
-                                {_effect.options.type === 'rotate' && (
-                                    <Rotate key={index} index={index} animations={_animations[0]} activeObj={activeObj} updateElements={updateElements} />
-                                )}
-                                {_effect.options.type === 'scale' && (
-                                    <Scale key={index} index={index} animations={_animations[0]} activeObj={activeObj} updateElements={updateElements} />
-                                )}
-                                {_effect.options.type === 'blink' && (
-                                    <Opacity key={index} index={index} animations={_animations[0]} activeObj={activeObj} updateElements={updateElements} />
-                                )}
+                                {_effect.options.type === 'fadeIn' && <FadeIn key={index} index={index} animations={_animations[0]} />}
+                                {_effect.options.type === 'move' && <Move key={index} index={index} animations={_animations[0]} />}
+                                {_effect.options.type === 'fadeOut' && <FadeOut key={index} index={index} animations={_animations[0]} />}
+                                {_effect.options.type === 'rotate' && <Rotate key={index} index={index} animations={_animations[0]} />}
+                                {_effect.options.type === 'scale' && <Scale key={index} index={index} animations={_animations[0]} />}
+                                {_effect.options.type === 'blink' && <Opacity key={index} index={index} animations={_animations[0]} />}
                             </div>
                         );
                     })

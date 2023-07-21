@@ -1,22 +1,12 @@
 import { useState, useCallback } from 'react';
 import { BiPalette, BiTrash } from 'react-icons/bi';
 import { Slider } from '../components/Slider';
-import { editorAtom } from '../../atoms/atoms';
+import { editorAtom, ActiveElementsAtom } from '../../atoms/atoms';
 import { useAtomValue } from 'jotai';
-import { TDMElements } from '../../editor/core';
 
-export const Rotate = ({
-    index,
-    animations,
-    activeObj,
-    updateElements
-}: {
-    index: number;
-    animations: any;
-    activeObj: TDMElements;
-    updateElements: () => void;
-}) => {
+export const Rotate = ({ index, animations }: { index: number; animations: any }) => {
     const editor = useAtomValue(editorAtom);
+    const activeElements = useAtomValue(ActiveElementsAtom);
     const animationList = Array.from(animations._animations) as any;
     const animation = animationList[index];
     const { transform } = animation.__keyframes[0];
@@ -31,12 +21,11 @@ export const Rotate = ({
         (startTime: number, endTime: number) => {
             (animation.effect as KeyframeEffect).updateTiming({ delay: startTime * 1000, duration: (endTime - startTime) * 1000 });
             animation.__updateTiming({ delay: startTime * 1000, duration: (endTime - startTime) * 1000 });
-            updateElements();
         },
-        [animation, updateElements]
+        [animation]
     );
     const onDelete = () => {
-        const effects = editor?.effect(activeObj);
+        const effects = editor?.effect(activeElements[0]);
         if (animation) effects?.delete(animation);
     };
 

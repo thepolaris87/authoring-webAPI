@@ -36,9 +36,6 @@ type AnimationCardProps = {
     element: TElements;
     effects: TEffectList[];
     animations: IEffectData[];
-    setActiveObj: (value: TDMElements) => void;
-    activeObj: TDMElements;
-    updateElements: () => void;
 };
 
 type SliderProps = {
