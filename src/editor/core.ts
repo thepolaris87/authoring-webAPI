@@ -140,7 +140,10 @@ export default class Editor {
             p.push(c.toData());
             return p;
         }, [] as IEffectData[]);
-        return { elements, effects };
+
+        const _effects = Object.values(this._effects);
+
+        return { elements, effects, _effects };
     }
 
     loadFromJSON(json?: any) {

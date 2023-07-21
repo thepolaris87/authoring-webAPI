@@ -9,8 +9,8 @@ export const Scale = ({ index, animations }: { index: number; animations: any })
     const activeElements = useAtomValue(ActiveElementsAtom);
     const animationList = Array.from(animations._animations) as any;
     const animation = animationList[index];
-    const { transform } = animation.__keyframes[0];
-    const scaleValue = transform.slice(6, -1).split(',');
+    const { scale: _scale } = animation.__keyframes[0];
+    const scaleValue = _scale.split(' ');
     const [scale, setScale] = useState({ x: scaleValue[0], y: scaleValue[1] });
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,8 +29,8 @@ export const Scale = ({ index, animations }: { index: number; animations: any })
     };
 
     useEffect(() => {
-        (animation.effect as KeyframeEffect).setKeyframes({ transform: `scale(${scale.x},${scale.y})` });
-        animation.__setKeyframes([{ transform: `scale(${scale.x},${scale.y})` }]);
+        (animation.effect as KeyframeEffect).setKeyframes({ scale: `${scale.x} ${scale.y}` });
+        animation.__setKeyframes([{ scale: `${scale.x} ${scale.y}` }]);
     }, [scale, animation]);
 
     return (

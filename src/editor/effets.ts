@@ -92,7 +92,7 @@ export default class Effects {
         return animation;
     }
     addRotate() {
-        const keyframes = [{ transform: 'rotate(0deg)' }];
+        const keyframes = [{ rotate: '0deg' }];
         const options: KeyframeEffectOptions = { type: 'rotate', duration: 100000, delay: 0 };
         const animation = new Animation(this.element, keyframes, { ...this._keyframeDefaultOption, ...options });
         this._animations.add(animation);
@@ -100,7 +100,7 @@ export default class Effects {
         return animation;
     }
     addScale() {
-        const keyframes = [{ transform: 'scale(0,0)' }];
+        const keyframes = [{ scale: '0 0' }];
         const options: KeyframeEffectOptions = { type: 'scale', duration: 100000, delay: 0 };
         const animation = new Animation(this.element, keyframes, { ...this._keyframeDefaultOption, ...options });
         this._animations.add(animation);

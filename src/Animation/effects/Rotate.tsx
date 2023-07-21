@@ -9,13 +9,13 @@ export const Rotate = ({ index, animations }: { index: number; animations: any }
     const activeElements = useAtomValue(ActiveElementsAtom);
     const animationList = Array.from(animations._animations) as any;
     const animation = animationList[index];
-    const { transform } = animation.__keyframes[0];
-    const [rotate, setRotate] = useState(transform.slice(7, -4));
+    const { rotate: angle } = animation.__keyframes[0];
+    const [rotate, setRotate] = useState(String(angle.slice(0, -3)));
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setRotate(e.target.value);
-        (animation.effect as KeyframeEffect).setKeyframes({ transform: `rotate(${e.target.value}deg)` });
-        animation.__setKeyframes([{ transform: `rotate(${e.target.value}deg)` }]);
+        (animation.effect as KeyframeEffect).setKeyframes({ rotate: `${e.target.value}deg` });
+        animation.__setKeyframes([{ rotate: `${e.target.value}deg` }]);
     };
     const setTimeLine = useCallback(
         (startTime: number, endTime: number) => {
