@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useMemo } from 'react';
 import { BiPalette, BiTrash } from 'react-icons/bi';
 import { Slider } from '../components/Slider';
 import { editorAtom, ActiveElementsAtom } from '../../atoms/atoms';
@@ -8,10 +8,10 @@ import { pxToNumber } from '../../editor/util';
 export const Move = ({ index, animations }: { index: number; animations: any }) => {
     const editor = useAtomValue(editorAtom);
     const activeElements = useAtomValue(ActiveElementsAtom);
-    const animationList = Array.from(animations._animations) as any;
-    const animation = animationList[index];
-    const { translate } = animation.__keyframes[0];
-    const keyframes = translate.split(' ');
+    const animationList = useMemo(() => Array.from(animations[0]._animations) as any, [animations]);
+    const animation = useMemo(() => animationList[index], [animationList, index]);
+    const { translate } = useMemo(() => animation.__keyframes[0], [animation]);
+    const keyframes = useMemo(() => translate.split(' '), [translate]);
     const [move, setMove] = useState({ left: keyframes[0].slice(0, -2), top: keyframes[0].slice(0, -2) });
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,6 +37,10 @@ export const Move = ({ index, animations }: { index: number; animations: any }) 
     }, [animation, activeElements, move]);
 
     useEffect(() => {
+        updateMove();
+    }, [move, updateMove]);
+
+    useEffect(() => {
         const addElementListener = () => {
             updateMove();
         };
@@ -45,6 +49,10 @@ export const Move = ({ index, animations }: { index: number; animations: any }) 
             editor?.off('element:drag:end', addElementListener);
         };
     }, [editor, updateMove]);
+
+    useEffect(() => {
+        setMove({ left: keyframes[0].slice(0, -2), top: keyframes[0].slice(0, -2) });
+    }, [animation, keyframes]);
 
     return (
         <div className="flex justify-between items-center mb-1">

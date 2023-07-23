@@ -141,6 +141,11 @@ export default class Editor {
             return p;
         }, [] as IEffectData[]);
 
+        return { elements, effects };
+    }
+
+    toElements() {
+        const { elements, effects } = this.toData();
         const _effects = Object.values(this._effects);
 
         return { elements, effects, _effects };

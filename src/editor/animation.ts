@@ -12,8 +12,8 @@ export default class Animation extends GlobalAnimation {
     __getKeyframes() {
         return this.__keyframes;
     }
-    __updateTiming(data: EffectTiming) {
-        this.effect?.updateTiming(data);
+    __updateTiming(data: EffectTiming | OptionalEffectTiming) {
+        this.effect?.updateTiming(data as OptionalEffectTiming);
         this.__options = { ...this.__options, ...data };
     }
     __setKeyframes(data: Keyframe[] | PropertyIndexedKeyframes, option?: string) {

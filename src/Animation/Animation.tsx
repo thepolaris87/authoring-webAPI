@@ -6,8 +6,7 @@ import { AnimationList } from './components/AnimationList';
 export const Animation = () => {
     const editor = useAtomValue(editorAtom);
     const [play, setPlay] = useState(true);
-    const [elements, setElements] = useState<any>({ elements: null, effect: null });
-    // const [effects, setEffects] = useState<IEffectData[]>();
+    const [elements, setElements] = useState<any>([]);
 
     const onPlay = async () => {
         setPlay(false);
@@ -22,7 +21,7 @@ export const Animation = () => {
     useEffect(() => {
         const addElementListener = () => {
             const _elements = editor?.toElements();
-            setElements({ elements: _elements, effects: _elements?._effects });
+            setElements({ elements: _elements?.elements, effects: _elements?.effects, effects2: _elements?._effects });
         };
         editor?.on('element:add', addElementListener);
         editor?.on('element:remove', addElementListener);
@@ -50,9 +49,7 @@ export const Animation = () => {
                     </button>
                 )}
             </div>
-            {elements.elements && (
-                <AnimationList elements={elements.elements.elements} effects={elements.elements.effects} animations={elements.effects as IEffectData[]} />
-            )}
+            {elements.elements && <AnimationList elements={elements.elements} effects={elements.effects} animations={elements.effects2 as IEffectData[]} />}
         </div>
     );
 };

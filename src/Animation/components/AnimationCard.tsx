@@ -111,12 +111,12 @@ export const AnimationCard = ({ element, effects, animations }: AnimationCardPro
                     effect.animation.map((_effect, index: number) => {
                         return (
                             <div key={index} className="p-[4px]">
-                                {_effect.options.type === 'fadeIn' && <FadeIn key={index} index={index} animations={_animations[0]} />}
-                                {_effect.options.type === 'move' && <Move key={index} index={index} animations={_animations[0]} />}
-                                {_effect.options.type === 'fadeOut' && <FadeOut key={index} index={index} animations={_animations[0]} />}
-                                {_effect.options.type === 'rotate' && <Rotate key={index} index={index} animations={_animations[0]} />}
-                                {_effect.options.type === 'scale' && <Scale key={index} index={index} animations={_animations[0]} />}
-                                {_effect.options.type === 'blink' && <Opacity key={index} index={index} animations={_animations[0]} />}
+                                {_effect.options.type === 'fadeIn' && <FadeIn key={index} index={index} animations={_animations} />}
+                                {_effect.options.type === 'move' && <Move key={index} index={index} animations={_animations} />}
+                                {_effect.options.type === 'fadeOut' && <FadeOut key={index} index={index} animations={_animations} />}
+                                {_effect.options.type === 'rotate' && <Rotate key={index} index={index} animations={_animations} />}
+                                {_effect.options.type === 'scale' && <Scale key={index} index={index} animations={_animations} />}
+                                {_effect.options.type === 'blink' && <Opacity key={index} index={index} animations={_animations} />}
                             </div>
                         );
                     })

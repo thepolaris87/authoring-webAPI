@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { BiPalette, BiTrash } from 'react-icons/bi';
 import { Slider } from '../components/Slider';
 import { editorAtom, ActiveElementsAtom } from '../../atoms/atoms';
@@ -7,10 +7,10 @@ import { useAtomValue } from 'jotai';
 export const Scale = ({ index, animations }: { index: number; animations: any }) => {
     const editor = useAtomValue(editorAtom);
     const activeElements = useAtomValue(ActiveElementsAtom);
-    const animationList = Array.from(animations._animations) as any;
-    const animation = animationList[index];
-    const { scale: _scale } = animation.__keyframes[0];
-    const scaleValue = _scale.split(' ');
+    const animationList = useMemo(() => Array.from(animations[0]._animations) as any, [animations]);
+    const animation = useMemo(() => animationList[index], [animationList, index]);
+    const { scale: _scale } = useMemo(() => animation.__keyframes[0], [animation]);
+    const scaleValue = useMemo(() => _scale.split(' '), [_scale]);
     const [scale, setScale] = useState({ x: scaleValue[0], y: scaleValue[1] });
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,6 +32,10 @@ export const Scale = ({ index, animations }: { index: number; animations: any })
         (animation.effect as KeyframeEffect).setKeyframes({ scale: `${scale.x} ${scale.y}` });
         animation.__setKeyframes([{ scale: `${scale.x} ${scale.y}` }]);
     }, [scale, animation]);
+
+    useEffect(() => {
+        setScale({ x: scaleValue[0], y: scaleValue[1] });
+    }, [animation, scaleValue]);
 
     return (
         <div className="flex justify-between items-center mb-1">

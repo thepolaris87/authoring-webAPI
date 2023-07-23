@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { BiPalette, BiTrash } from 'react-icons/bi';
 import { Slider } from '../components/Slider';
 import { editorAtom, ActiveElementsAtom } from '../../atoms/atoms';
@@ -7,10 +7,10 @@ import { useAtomValue } from 'jotai';
 export const Opacity = ({ index, animations }: { index: number; animations: any }) => {
     const editor = useAtomValue(editorAtom);
     const activeElements = useAtomValue(ActiveElementsAtom);
-    const animationList = Array.from(animations._animations) as any;
-    const animation = animationList[index];
-    const { delay, duration } = animation.__options;
-    const value = (delay + duration - delay) / (Object.keys(animation.__keyframes).length * 1000);
+    const animationList = useMemo(() => Array.from(animations[0]._animations) as any, [animations]);
+    const animation = useMemo(() => animationList[index], [animationList, index]);
+    const { delay, duration } = useMemo(() => animation.__options, [animation]);
+    const value = useMemo(() => (delay + duration - delay) / (Object.keys(animation.__keyframes).length * 1000), [delay, duration, animation]);
     const [interval, setInterval] = useState(Object.keys(animation.__keyframes).length === 3 ? '1' : String(Math.ceil(value)));
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,6 +46,11 @@ export const Opacity = ({ index, animations }: { index: number; animations: any 
         const effects = editor?.effect(activeElements[0]);
         if (animation) effects?.delete(animation);
     };
+
+    useEffect(() => {
+        const value = (delay + duration - delay) / (Object.keys(animation.__keyframes).length * 1000);
+        setInterval(Object.keys(animation.__keyframes).length === 3 ? '1' : String(Math.ceil(value)));
+    }, [animation, delay, duration]);
 
     return (
         <div className="flex justify-between items-center mb-1">

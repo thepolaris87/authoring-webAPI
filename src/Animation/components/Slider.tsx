@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Input } from './Input';
 
 export const Slider = ({ setTimeLine, animation }: SliderProps) => {
     const [flag, setFlag] = useState(false);
-    const { delay, duration } = animation.__options;
+    const { delay, duration } = useMemo(() => animation.__options, [animation]);
     const [position, setPosition] = useState(0);
     const [startTime, setStartTime] = useState(delay / 1000);
     const [endTime, setEndTime] = useState((delay + duration) / 1000);
@@ -37,8 +37,13 @@ export const Slider = ({ setTimeLine, animation }: SliderProps) => {
         setTimeLine(startTime, endTime);
     }, [startTime, endTime, setTimeLine]);
 
+    useEffect(() => {
+        setStartTime(delay / 1000);
+        setEndTime((delay + duration) / 1000);
+    }, [animation, delay, duration]);
+
     return (
-        <div className={'hidden sm:flex w-full items-center relative'} onMouseMove={(e) => onMouseMove(e)} onMouseLeave={() => setFlag(false)}>
+        <div key="slider" className={'hidden sm:flex w-full items-center relative'} onMouseMove={(e) => onMouseMove(e)} onMouseLeave={() => setFlag(false)}>
             <Input value={startTime} setTime={setTime} setValue={setStartTime} flag={flag} />
             <Input value={endTime} setTime={setTime} setValue={setEndTime} flag={flag} />
             <div className="relative h-[7px] w-full rounded-[4px] bg-[white]">

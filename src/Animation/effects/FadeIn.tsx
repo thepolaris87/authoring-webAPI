@@ -7,7 +7,7 @@ import { useAtomValue } from 'jotai';
 export const FadeIn = ({ index, animations }: { index: number; animations: any }) => {
     const editor = useAtomValue(editorAtom);
     const activeElements = useAtomValue(ActiveElementsAtom);
-    const animationList = useMemo(() => Array.from(animations._animations) as any, [animations]);
+    const animationList = useMemo(() => Array.from(animations[0]._animations) as any, [animations]);
     const animation = useMemo(() => animationList[index], [animationList, index]);
 
     const setTimeLine = useCallback(
