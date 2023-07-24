@@ -1,5 +1,6 @@
 interface KeyframeEffectOptions {
     type?: TEffect;
+    interval?: string;
 }
 
 // Editor

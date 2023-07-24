@@ -3,19 +3,18 @@ import { BiPalette, BiTrash } from 'react-icons/bi';
 import { Slider } from '../components/Slider';
 import { editorAtom, ActiveElementsAtom } from '../../atoms/atoms';
 import { useAtomValue } from 'jotai';
+import classNames from 'classnames';
 
-export const Opacity = ({ index, animations }: { index: number; animations: any }) => {
+export const Opacity = ({ index, animations, play }: { index: number; animations: any; play: boolean }) => {
     const editor = useAtomValue(editorAtom);
     const activeElements = useAtomValue(ActiveElementsAtom);
     const animationList = useMemo(() => Array.from(animations[0]._animations) as any, [animations]);
     const animation = useMemo(() => animationList[index], [animationList, index]);
-    const { delay, duration } = useMemo(() => animation.__options, [animation]);
-    const value = useMemo(() => (delay + duration - delay) / (Object.keys(animation.__keyframes).length * 1000), [delay, duration, animation]);
-    const [interval, setInterval] = useState(Object.keys(animation.__keyframes).length === 3 ? '1' : String(Math.ceil(value)));
+    const { interval: _interval } = useMemo(() => animation.__options, [animation]);
+    const [interval, setInterval] = useState(_interval ? _interval : '1');
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInterval(e.target.value);
-        updateTiming();
     };
     const updateTiming = useCallback(() => {
         const timeline = (animation.effect as KeyframeEffect).getTiming();
@@ -24,7 +23,6 @@ export const Opacity = ({ index, animations }: { index: number; animations: any 
         let t2 = t1;
         let flag = true;
         const endTime = (timeline.delay as number) + (timeline.duration as number);
-
         while (t2 < endTime) {
             t2 = t1 + Number(interval) * 1000;
             t1 = t2;
@@ -48,9 +46,8 @@ export const Opacity = ({ index, animations }: { index: number; animations: any 
     };
 
     useEffect(() => {
-        const value = (delay + duration - delay) / (Object.keys(animation.__keyframes).length * 1000);
-        setInterval(Object.keys(animation.__keyframes).length === 3 ? '1' : String(Math.ceil(value)));
-    }, [animation, delay, duration]);
+        setInterval(_interval ? _interval : '1');
+    }, [animation, _interval]);
 
     return (
         <div className="flex justify-between items-center mb-1">
@@ -62,17 +59,17 @@ export const Opacity = ({ index, animations }: { index: number; animations: any 
                 <span className="flex pr-2">
                     <label className="mr-2">Interval</label>
                     <input
-                        name="left"
+                        name="interval"
                         className="rounded-sm px-2 mr-3 w-[80%] shadow-[0_1px_#cdd8dd]"
                         value={interval}
                         onChange={(e) => onChange(e)}
-                        // disabled={isPlay}
+                        disabled={play}
                     />
                 </span>
             </div>
             <div className="flex w-[60%]">
-                <Slider setTimeLine={setTimeLine} animation={animation} />
-                <BiTrash className="w-[24px] h-[24px] ml-3 cursor-pointer" onClick={onDelete} />
+                <Slider setTimeLine={setTimeLine} animation={animation} isPlaying={play} />
+                <BiTrash className={classNames('w-[24px] h-[24px] ml-3', play ? 'cursor-not-allowed' : 'cursor-pointer')} onClick={() => !play && onDelete()} />
             </div>
         </div>
     );

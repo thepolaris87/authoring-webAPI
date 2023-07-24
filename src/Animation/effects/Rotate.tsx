@@ -3,8 +3,9 @@ import { BiPalette, BiTrash } from 'react-icons/bi';
 import { Slider } from '../components/Slider';
 import { editorAtom, ActiveElementsAtom } from '../../atoms/atoms';
 import { useAtomValue } from 'jotai';
+import classNames from 'classnames';
 
-export const Rotate = ({ index, animations }: { index: number; animations: any }) => {
+export const Rotate = ({ index, animations, play }: { index: number; animations: any; play: boolean }) => {
     const editor = useAtomValue(editorAtom);
     const activeElements = useAtomValue(ActiveElementsAtom);
     const animationList = useMemo(() => Array.from(animations[0]._animations) as any, [animations]);
@@ -48,13 +49,13 @@ export const Rotate = ({ index, animations }: { index: number; animations: any }
                         className="rounded-sm px-2 mr-3 w-[80%] shadow-[0_1px_#cdd8dd]"
                         value={rotate}
                         onChange={(e) => onChange(e)}
-                        // disabled={isPlay}
+                        disabled={play}
                     />
                 </span>
             </div>
             <div className="flex w-[60%]">
-                <Slider setTimeLine={setTimeLine} animation={animation} />
-                <BiTrash className="w-[24px] h-[24px] ml-3 cursor-pointer" onClick={onDelete} />
+                <Slider setTimeLine={setTimeLine} animation={animation} isPlaying={play} />
+                <BiTrash className={classNames('w-[24px] h-[24px] ml-3', play ? 'cursor-not-allowed' : 'cursor-pointer')} onClick={() => !play && onDelete()} />
             </div>
         </div>
     );

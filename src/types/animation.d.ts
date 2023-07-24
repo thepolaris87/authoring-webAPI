@@ -36,6 +36,7 @@ type AnimationCardProps = {
     element: TElements;
     effects: TEffectList[];
     animations: IEffectData[];
+    playing: boolean;
 };
 
 type SliderProps = {

@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Input } from './Input';
 
-export const Slider = ({ setTimeLine, animation }: SliderProps) => {
+export const Slider = ({ setTimeLine, animation, isPlaying }: SliderProps) => {
     const [flag, setFlag] = useState(false);
     const { delay, duration } = useMemo(() => animation.__options, [animation]);
     const [position, setPosition] = useState(0);
@@ -14,7 +14,7 @@ export const Slider = ({ setTimeLine, animation }: SliderProps) => {
         setStartTime(startTime - 1);
     };
     const onMouseMove = (e: React.MouseEvent) => {
-        // if (isPlaying || playFlag) return;
+        if (isPlaying) return;
         e.stopPropagation();
         if (!flag) return;
         const num = e.screenX >= 1300 ? 10 : 5;
@@ -44,8 +44,8 @@ export const Slider = ({ setTimeLine, animation }: SliderProps) => {
 
     return (
         <div key="slider" className={'hidden sm:flex w-full items-center relative'} onMouseMove={(e) => onMouseMove(e)} onMouseLeave={() => setFlag(false)}>
-            <Input value={startTime} setTime={setTime} setValue={setStartTime} flag={flag} />
-            <Input value={endTime} setTime={setTime} setValue={setEndTime} flag={flag} />
+            <Input value={startTime} setTime={setTime} setValue={setStartTime} flag={flag} isPlaying={isPlaying} />
+            <Input value={endTime} setTime={setTime} setValue={setEndTime} flag={flag} isPlaying={isPlaying} />
             <div className="relative h-[7px] w-full rounded-[4px] bg-[white]">
                 <div
                     className="group absolute rounded-[10px] h-[7px] bg-[#a3a2a2] cursor-pointer"

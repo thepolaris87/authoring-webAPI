@@ -4,15 +4,16 @@ import { Slider } from '../components/Slider';
 import { editorAtom, ActiveElementsAtom } from '../../atoms/atoms';
 import { useAtomValue } from 'jotai';
 import { pxToNumber } from '../../editor/util';
+import classNames from 'classnames';
 
-export const Move = ({ index, animations }: { index: number; animations: any }) => {
+export const Move = ({ index, animations, play }: { index: number; animations: any; play: boolean }) => {
     const editor = useAtomValue(editorAtom);
     const activeElements = useAtomValue(ActiveElementsAtom);
     const animationList = useMemo(() => Array.from(animations[0]._animations) as any, [animations]);
     const animation = useMemo(() => animationList[index], [animationList, index]);
     const { translate } = useMemo(() => animation.__keyframes[0], [animation]);
     const keyframes = useMemo(() => translate.split(' '), [translate]);
-    const [move, setMove] = useState({ left: keyframes[0].slice(0, -2), top: keyframes[0].slice(0, -2) });
+    const [move, setMove] = useState({ left: keyframes[0].slice(0, -2), top: keyframes[1].slice(0, -2) });
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setMove({ ...move, [e.target.name]: e.target.value });
@@ -51,7 +52,7 @@ export const Move = ({ index, animations }: { index: number; animations: any }) 
     }, [editor, updateMove]);
 
     useEffect(() => {
-        setMove({ left: keyframes[0].slice(0, -2), top: keyframes[0].slice(0, -2) });
+        setMove({ left: keyframes[0].slice(0, -2), top: keyframes[1].slice(0, -2) });
     }, [animation, keyframes]);
 
     return (
@@ -68,7 +69,7 @@ export const Move = ({ index, animations }: { index: number; animations: any }) 
                         className="rounded-sm px-2 mr-3 w-[80%] shadow-[0_1px_#cdd8dd]"
                         value={move.left}
                         onChange={(e) => onChange(e)}
-                        // disabled={isPlay}
+                        disabled={play}
                     />
                     <label className="mr-2">y</label>
                     <input
@@ -76,13 +77,13 @@ export const Move = ({ index, animations }: { index: number; animations: any }) 
                         className="rounded-sm px-2 w-[80%] shadow-[0_1px_#cdd8dd]"
                         value={move.top}
                         onChange={(e) => onChange(e)}
-                        // disabled={isPlay}
+                        disabled={play}
                     />
                 </span>
             </div>
             <div className="flex w-[60%]">
-                <Slider setTimeLine={setTimeLine} animation={animation} />
-                <BiTrash className="w-[24px] h-[24px] ml-3 cursor-pointer" onClick={onDelete} />
+                <Slider setTimeLine={setTimeLine} animation={animation} isPlaying={play} />
+                <BiTrash className={classNames('w-[24px] h-[24px] ml-3', play ? 'cursor-not-allowed' : 'cursor-pointer')} onClick={() => !play && onDelete()} />
             </div>
         </div>
     );

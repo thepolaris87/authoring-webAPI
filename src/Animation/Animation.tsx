@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useAtomValue } from 'jotai';
-import { editorAtom } from '../atoms/atoms';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { editorAtom, playAtom } from '../atoms/atoms';
 import { AnimationList } from './components/AnimationList';
 
 export const Animation = () => {
@@ -49,7 +49,9 @@ export const Animation = () => {
                     </button>
                 )}
             </div>
-            {elements.elements && <AnimationList elements={elements.elements} effects={elements.effects} animations={elements.effects2 as IEffectData[]} />}
+            {elements.elements && (
+                <AnimationList elements={elements.elements} effects={elements.effects} animations={elements.effects2 as IEffectData[]} play={play} />
+            )}
         </div>
     );
 };

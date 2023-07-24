@@ -4,7 +4,7 @@ import { FadeIn, FadeOut, Move, Rotate, Scale, Opacity } from '../effects';
 import { ActiveElementsAtom, editorAtom } from '../../atoms/atoms';
 import { useAtomValue, useAtom } from 'jotai';
 
-export const AnimationCard = ({ element, effects, animations }: AnimationCardProps) => {
+export const AnimationCard = ({ element, effects, animations, playing }: AnimationCardProps) => {
     const editor = useAtomValue(editorAtom);
     const [activeElements, setActiveElements] = useAtom(ActiveElementsAtom);
     const [open, setOpen] = useState(true);
@@ -57,6 +57,11 @@ export const AnimationCard = ({ element, effects, animations }: AnimationCardPro
         });
     }, [inputRef]);
 
+    useEffect(() => {
+        if (playing) setPlay(false);
+        else setPlay(true);
+    }, [playing]);
+
     return (
         <div
             className="rounded-[8px] mb-4 p-[4px_10px] shadow-[1px_3px_5px_1px_#cdd8dd] cursor-grab"
@@ -74,7 +79,7 @@ export const AnimationCard = ({ element, effects, animations }: AnimationCardPro
                         onClick={() => setDropDown(!dropDown)}
                         value={_effect ? _effect : 'Select animation'}
                         ref={inputRef}
-                        // disabled={isPlay || isPlaying}
+                        disabled={play}
                     ></input>
                     {dropDown && (
                         <ul className="bg-[white] w-[500px] shadow-[1px_1px_3px_1px_#cdd8dd] text-center cursor-pointer absolute top-0 ml-2 z-20">
@@ -94,14 +99,14 @@ export const AnimationCard = ({ element, effects, animations }: AnimationCardPro
                     {!open ? <MdChevronRight className="w-[24px] h-[24px]" /> : <MdKeyboardArrowDown className="w-[24px] h-[24px]" />}
                     <h5 className="text-[18px]">effects</h5>
                 </button>
-                {_effects[0] && _effects[0].animation.length !== 0 && !play ? (
+                {!playing ? null : _effects[0] && _effects[0].animation.length !== 0 && !play ? (
                     <button className="bg-[orange] text-[white] p-[4px_12px] rounded-[8px] hover:bg-[#FFB129]" onClick={() => onPlay()}>
-                        Play
+                        PLAY
                     </button>
                 ) : (
                     play && (
                         <button className="bg-[#ff3705] text-[white] p-[4px_12px] rounded-[8px] hover:bg-[#ff3705d1]" onClick={() => onStop()}>
-                            Stop
+                            STOP
                         </button>
                     )
                 )}
@@ -111,12 +116,12 @@ export const AnimationCard = ({ element, effects, animations }: AnimationCardPro
                     effect.animation.map((_effect, index: number) => {
                         return (
                             <div key={index} className="p-[4px]">
-                                {_effect.options.type === 'fadeIn' && <FadeIn key={index} index={index} animations={_animations} />}
-                                {_effect.options.type === 'move' && <Move key={index} index={index} animations={_animations} />}
-                                {_effect.options.type === 'fadeOut' && <FadeOut key={index} index={index} animations={_animations} />}
-                                {_effect.options.type === 'rotate' && <Rotate key={index} index={index} animations={_animations} />}
-                                {_effect.options.type === 'scale' && <Scale key={index} index={index} animations={_animations} />}
-                                {_effect.options.type === 'blink' && <Opacity key={index} index={index} animations={_animations} />}
+                                {_effect.options.type === 'fadeIn' && <FadeIn key={index} index={index} animations={_animations} play={play} />}
+                                {_effect.options.type === 'move' && <Move key={index} index={index} animations={_animations} play={play} />}
+                                {_effect.options.type === 'fadeOut' && <FadeOut key={index} index={index} animations={_animations} play={play} />}
+                                {_effect.options.type === 'rotate' && <Rotate key={index} index={index} animations={_animations} play={play} />}
+                                {_effect.options.type === 'scale' && <Scale key={index} index={index} animations={_animations} play={play} />}
+                                {_effect.options.type === 'blink' && <Opacity key={index} index={index} animations={_animations} play={play} />}
                             </div>
                         );
                     })

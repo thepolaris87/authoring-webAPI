@@ -22,7 +22,7 @@ export const Input = ({ value, setTime, setValue, isPlaying, flag }: InputProps)
                 onMouseOver={() => setChange(true)}
                 onMouseUp={() => setChange(false)}
                 onMouseLeave={() => setChange(false)}
-                // disabled={isPlaying}
+                disabled={isPlaying}
             />
             <Tooltip value={value} flag={flag} change={change} />
         </div>
